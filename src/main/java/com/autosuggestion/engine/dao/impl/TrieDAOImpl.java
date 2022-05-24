@@ -1,5 +1,6 @@
-package com.autosuggestion.engine.dao;
+package com.autosuggestion.engine.dao.impl;
 
+import com.autosuggestion.engine.dao.TrieDAO;
 import com.autosuggestion.engine.dto.TrieNode;
 import com.autosuggestion.engine.services.TrieUtility;
 import org.apache.logging.log4j.LogManager;
