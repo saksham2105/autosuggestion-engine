@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,10 @@ public class TrieDAOImpl implements TrieDAO {
     @Override
     public void insert(String word) {
         logger.info("Going to Insert word {} in Trie",word);
-        this.cacheManager.getCache(suggestionsCacheName).clear(); //Clearing Cache Before Inserting
+        Cache cache = this.cacheManager.getCache(suggestionsCacheName);
+        if (cache != null) {
+            this.cacheManager.getCache(suggestionsCacheName).clear(); //Clearing Cache Before Inserting
+        }
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
             if (node.getChildren()[ch] == null)
