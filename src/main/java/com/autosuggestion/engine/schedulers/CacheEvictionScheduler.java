@@ -14,9 +14,9 @@ import java.util.Date;
  * A Cron Job to Clear Cache Based on Configured Time
  */
 @Component
-public class CacheEvictScheduler {
+public class CacheEvictionScheduler {
 
-    private static final Logger logger = LogManager.getLogger(CacheEvictScheduler.class);
+    private static final Logger logger = LogManager.getLogger(CacheEvictionScheduler.class);
 
     @Autowired
     private CacheManager cacheManager;
