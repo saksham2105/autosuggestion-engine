@@ -2,6 +2,8 @@ package com.autosuggestion.engine.dao;
 
 import com.autosuggestion.engine.dto.TrieNode;
 import com.autosuggestion.engine.services.TrieUtility;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,8 @@ import java.util.List;
 @Repository
 public class TrieDAOImpl implements TrieDAO {
 
+    private static final Logger logger = LogManager.getLogger(TrieDAOImpl.class);
+
     @Autowired
     private TrieUtility trieUtility;
 
@@ -19,11 +23,11 @@ public class TrieDAOImpl implements TrieDAO {
 
     /**
      * A Helper Function to Insert any Specific Word in Trie
-     *
      * @param word
      */
     @Override
     public void insert(String word) {
+        logger.info("Going to Insert word {} in Trie",word);
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
             if (node.getChildren()[ch] == null)
@@ -37,13 +41,13 @@ public class TrieDAOImpl implements TrieDAO {
      * A Helper Function to Suggest Words By Iterating in the Trie
      * This Method Must Be Cacheable as Caching will reduce search complexity
      * from logarithmic to Constant
-     *
      * @param prefix
      * @return
      */
     @Override
-    @Cacheable(value = "${suggestions.cache.name}", key = "prefix")
+    @Cacheable(value = "suggestions")
     public List<String> suggest(String prefix) {
+        logger.info("Going to Search prefix {} in Trie",prefix);
         TrieNode node = root;
         List<String> res = new ArrayList<>();
         for (char ch : prefix.toCharArray()) {
