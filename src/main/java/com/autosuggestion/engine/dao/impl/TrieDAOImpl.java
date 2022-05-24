@@ -6,6 +6,8 @@ import com.autosuggestion.engine.services.TrieUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,13 @@ public class TrieDAOImpl implements TrieDAO {
     @Autowired
     private TrieUtility trieUtility;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Value("${suggestions.cache.name:suggestions}")
+    private String suggestionsCacheName;
+
+
     TrieNode root = new TrieNode(' '); //inserting empty character in Trie
 
     /**
@@ -29,6 +38,7 @@ public class TrieDAOImpl implements TrieDAO {
     @Override
     public void insert(String word) {
         logger.info("Going to Insert word {} in Trie",word);
+        this.cacheManager.getCache(suggestionsCacheName).clear(); //Clearing Cache Before Inserting
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
             if (node.getChildren()[ch] == null)
